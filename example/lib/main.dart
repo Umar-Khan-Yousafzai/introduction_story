@@ -88,6 +88,8 @@ class HomePage extends StatelessWidget {
         opaque: false,
         pageBuilder: (_, __, ___) => IntroductionStoryScreen(
           isDismissible: true,
+          isAsset: false,
+          duration: 4000,
           stories: [
             Story(
               imagePath: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg',
