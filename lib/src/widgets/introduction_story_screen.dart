@@ -19,7 +19,6 @@ class IntroductionStoryScreen extends StatelessWidget {
     super.key,
     required this.stories,
     this.duration = 2000,
-    required this.onComplete,
     this.isAsset = true,
     this.isDismissible = false,
     this.hideSkipButton = false,
@@ -47,7 +46,7 @@ class IntroductionStoryScreen extends StatelessWidget {
   ///
   /// @Default `false`
   final bool isDismissible;
-  final Function onComplete;
+
   /// Show/hide close button.
   ///
   /// @Default `false`
@@ -65,9 +64,7 @@ class IntroductionStoryScreen extends StatelessWidget {
         )..add(const IntroductionStarted()),
         child: BlocConsumer<IntroductionBloc, IntroductionState>(
           listener: (_, state) {
-            if (state is IntroductionRunComplete) 
-              onComplete;
-            // Navigator.pop(context);
+            if (state is IntroductionRunComplete) Navigator.pop(context);
           },
           buildWhen: (_, current) => current is IntroductionRunInProgress,
           builder: (context, state) {
