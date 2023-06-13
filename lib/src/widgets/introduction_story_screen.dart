@@ -17,6 +17,8 @@ class IntroductionStoryScreen extends StatelessWidget {
   IntroductionStoryScreen({
     super.key,
     required this.stories,
+    required this.widget,
+    this.popRoute = false,
     this.duration = 2000,
     this.isDismissible = false,
     this.hideSkipButton = false,
@@ -49,6 +51,11 @@ class IntroductionStoryScreen extends StatelessWidget {
   /// @Default `false`
   final bool hideSkipButton;
 
+  /// Routes to the Next Screen If needed
+  final Widget widget;
+
+  final bool popRoute;
+
   @override
   Widget build(BuildContext context) {
     _prefetchImages(stories, context);
@@ -61,7 +68,8 @@ class IntroductionStoryScreen extends StatelessWidget {
         )..add(const IntroductionStarted()),
         child: BlocConsumer<IntroductionBloc, IntroductionState>(
           listener: (_, state) {
-            if (state is IntroductionRunComplete) Navigator.pop(context);
+            if (state is IntroductionRunComplete)popRoute==true?Navigator.pop(context) : Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => widget),);
           },
           buildWhen: (_, current) => current is IntroductionRunInProgress,
           builder: (context, state) {
@@ -118,6 +126,8 @@ class IntroductionStoryScreen extends StatelessWidget {
                   // Foreground
                   _Foreground(
                     story,
+                    popRoute,
+                    widget,
                     state.watchProgress,
                     hideCloseButton: hideSkipButton,
                   ),
@@ -134,7 +144,8 @@ class IntroductionStoryScreen extends StatelessWidget {
         : Dismissible(
             key: UniqueKey(),
             direction: DismissDirection.vertical,
-            onDismissed: (_) => Navigator.of(context).pop(),
+            onDismissed: (_) =>popRoute==true?Navigator.pop(context) : Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => widget),),
             child: scaffold,
           );
   }
@@ -153,15 +164,17 @@ void _prefetchImages(List<Story> stories, BuildContext context) {
 class _Foreground extends StatelessWidget {
   const _Foreground(
     this.story,
+    this.popRoute,
+    this.widget,
     this.watchProgress, {
     required this.hideCloseButton,
   });
 
   final List<int> watchProgress;
   final bool hideCloseButton;
-
+  final Widget widget;
   final Story story;
-
+  final bool popRoute;
   @override
   Widget build(BuildContext context) {
     const horizontalPadding = 18.0;
@@ -213,7 +226,8 @@ class _Foreground extends StatelessWidget {
                   visible: !hideCloseButton,
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => popRoute==true?Navigator.of(context).pop() : Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => widget),),
                     icon: Icon(
                       Icons.clear,
                       size: 20,
