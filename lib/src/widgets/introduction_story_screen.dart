@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,9 @@ class IntroductionStoryScreen extends StatelessWidget {
     required this.stories,
     required this.widget,
     this.popRoute = false,
+
     this.duration = 2000,
+    this.isAsset = true,
     this.isDismissible = false,
     this.hideSkipButton = false,
   })  : assert(stories.isNotEmpty, 'Stories count should be more than zero!'),
@@ -32,6 +35,7 @@ class IntroductionStoryScreen extends StatelessWidget {
           'Screen should at least swiped to be dismissed '
           'or gives the ability to be closed by showing the close button.',
         );
+  final bool isAsset;
 
   /// Each story watch duration.
   final List<Story> stories;
@@ -53,12 +57,10 @@ class IntroductionStoryScreen extends StatelessWidget {
 
   /// Routes to the Next Screen If needed
   final Widget widget;
-
   final bool popRoute;
-
   @override
   Widget build(BuildContext context) {
-    _prefetchImages(stories, context);
+    // _prefetchImages(stories, context);
 
     final scaffold = Scaffold(
       body: BlocProvider<IntroductionBloc>(
@@ -87,18 +89,34 @@ class IntroductionStoryScreen extends StatelessWidget {
                 children: [
                   // Background
                   // ignore: use_decorated_box
-                  Container(
-                    decoration: BoxDecoration(
-                      color: decoration.backgroundColor,
-                      image: imagePath == null
-                          ? null
-                          : DecorationImage(
-                              image: AssetImage(imagePath),
-                              fit: BoxFit.fill,
-                            ),
+                  if (isAsset == true)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: decoration.backgroundColor,
+                        image: imagePath == null
+                            ? null
+                            : DecorationImage(
+                                image: AssetImage(imagePath),
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+                    )
+                  else
+                    CachedNetworkImage(
+                      imageUrl: imagePath!,
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Center(child: Icon(Icons.error)),
                     ),
-                  ),
-
                   // Gestures
                   _Gestures(
                     onFirstHalfPressed: () {
@@ -228,6 +246,7 @@ class _Foreground extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     onPressed: () => popRoute==true?Navigator.of(context).pop() : Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => widget),),
+
                     icon: Icon(
                       Icons.clear,
                       size: 20,
