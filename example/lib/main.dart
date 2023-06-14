@@ -90,6 +90,7 @@ class HomePage extends StatelessWidget {
           isDismissible: true,
           isAsset: false,
           duration: 4000,
+
           stories: [
             Story(
               imagePath: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Jelly_cc11.jpg',
@@ -119,7 +120,7 @@ class HomePage extends StatelessWidget {
                   'within 15 minutes.',
               decoration: const StoryDecoration(lightMode: false),
             ),
-          ],
+          ], widget: Container(color: Colors.orange,),
         ),
       ),
     );
