@@ -1,5 +1,6 @@
 // coverage:ignore-file
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -58,6 +59,10 @@ class IntroductionStoryScreen extends StatelessWidget {
   /// Routes to the Next Screen If needed
   final Widget widget;
   final bool popRoute;
+
+  ///  int _pauseCounter = 0;
+  int _pauseCounter = 0;
+
   @override
   Widget build(BuildContext context) {
     // _prefetchImages(stories, context);
@@ -97,7 +102,7 @@ class IntroductionStoryScreen extends StatelessWidget {
                             ? null
                             : DecorationImage(
                                 image: AssetImage(imagePath),
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                       ),
                     )
@@ -112,10 +117,31 @@ class IntroductionStoryScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
+
+                      progressIndicatorBuilder: (context, url, progress) {
+                        if (progress.totalSize != null) {
+                          if (progress.downloaded < progress.totalSize! &&
+                              _pauseCounter == 0) {
+                            _pauseCounter++;
+                            context
+                                .read<IntroductionBloc>()
+                                .add(const IntroductionPause());
+                            log('PAUSED');
+                          } else if (progress.downloaded ==
+                              progress.totalSize!) {
+                            _pauseCounter = 0;
+                            context
+                                .read<IntroductionBloc>()
+                                .add(const IntroductionResume());
+                            log('RESUMED');
+                          }
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      // placeholder: (context, url) =>
+                      //     const Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) =>
-                          const Center(child: Icon(Icons.error)),
+                      const Center(child: Icon(Icons.error)),
                     ),
                   // Gestures
                   _Gestures(
@@ -175,7 +201,7 @@ void _prefetchImages(List<Story> stories, BuildContext context) {
   final imagePaths = stories.map((s) => s.imagePath);
 
   for (final imagePath in imagePaths) {
-    if (imagePath != null) precacheImage(AssetImage(imagePath), context);
+    // if (imagePath != null) precacheImage(AssetImage(imagePath), context);
   }
 }
 
