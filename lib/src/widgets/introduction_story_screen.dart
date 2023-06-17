@@ -255,7 +255,9 @@ class _Foreground extends StatelessWidget {
               Expanded(
                 child: Text(
                   story.name,
-                  style: story.decoration.nameTextStyle,
+                  style: TextStyle(
+                    color: Colors.black
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                 ),
@@ -294,7 +296,9 @@ class _Foreground extends StatelessWidget {
                 Flexible(
                   child: Text(
                     story.title,
-                    style: story.decoration.titleTextStyle,
+                    style: TextStyle(
+                    color: Colors.black
+                  ),
                     overflow: TextOverflow.fade,
                   ),
                 ),
@@ -305,7 +309,9 @@ class _Foreground extends StatelessWidget {
                 Flexible(
                   child: Text(
                     story.description,
-                    style: story.decoration.descriptionTextStyle,
+                    style: TextStyle(
+                    color: Colors.black
+                  ),
                     overflow: TextOverflow.fade,
                   ),
                 ),
