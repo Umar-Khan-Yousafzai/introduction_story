@@ -21,7 +21,6 @@ class IntroductionStoryScreen extends StatelessWidget {
     required this.stories,
     required this.widget,
     this.popRoute = false,
-
     this.duration = 2000,
     this.isAsset = true,
     this.isDismissible = false,
@@ -75,8 +74,13 @@ class IntroductionStoryScreen extends StatelessWidget {
         )..add(const IntroductionStarted()),
         child: BlocConsumer<IntroductionBloc, IntroductionState>(
           listener: (_, state) {
-            if (state is IntroductionRunComplete)popRoute==true?Navigator.pop(context) : Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => widget),);
+            if (state is IntroductionRunComplete)
+              popRoute == true
+                  ? Navigator.pop(context)
+                  : Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => widget),
+                    );
           },
           buildWhen: (_, current) => current is IntroductionRunInProgress,
           builder: (context, state) {
@@ -141,7 +145,7 @@ class IntroductionStoryScreen extends StatelessWidget {
                       // placeholder: (context, url) =>
                       //     const Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) =>
-                      const Center(child: Icon(Icons.error)),
+                          const Center(child: Icon(Icons.error)),
                     ),
                   // Gestures
                   _Gestures(
@@ -188,8 +192,12 @@ class IntroductionStoryScreen extends StatelessWidget {
         : Dismissible(
             key: UniqueKey(),
             direction: DismissDirection.vertical,
-            onDismissed: (_) =>popRoute==true?Navigator.pop(context) : Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => widget),),
+            onDismissed: (_) => popRoute == true
+                ? Navigator.pop(context)
+                : Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => widget),
+                  ),
             child: scaffold,
           );
   }
@@ -223,95 +231,122 @@ class _Foreground extends StatelessWidget {
   Widget build(BuildContext context) {
     const horizontalPadding = 18.0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(
-            top: 60,
-            start: horizontalPadding,
-            end: horizontalPadding,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Progress bars
-              _WatchProgressBars(
-                progresses: watchProgress
-                    .map((e) => e / completeWatchProgress)
-                    .toList(),
-                color: story.decoration.storyTheme.foregroundColor,
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(
-            start: horizontalPadding,
-          ),
-          child: Row(
-            children: [
-              // Story name.
-              Expanded(
-                child: Text(
-                  story.name,
-                  style: story.decoration.nameTextStyle,
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
+        Positioned(
+            bottom: 10,
+            right: 10,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(90, 30),
+                  elevation: 0,
+                  backgroundColor: Color.fromRGBO(112, 112, 112, 0.4),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
                 ),
+                onPressed: () => popRoute == true
+                    ? Navigator.of(context).pop()
+                    : Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => widget),
+                      ),
+                child: Text('Skip'))),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.only(
+                top: 60,
+                start: horizontalPadding,
+                end: horizontalPadding,
               ),
-              const Spacer(),
-
-              // Skip button.
-              SizedBox(
-                height: 44,
-                width: 60,
-                child: Visibility(
-                  visible: !hideCloseButton,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () => popRoute==true?Navigator.of(context).pop() : Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => widget),),
-
-                    icon: Icon(
-                      Icons.clear,
-                      size: 20,
-                      color: story.decoration.storyTheme.foregroundColor,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Progress bars
+                  _WatchProgressBars(
+                    progresses: watchProgress
+                        .map((e) => e / completeWatchProgress)
+                        .toList(),
+                    color: story.decoration.storyTheme.foregroundColor,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: horizontalPadding,
+              ),
+              child: Row(
+                children: [
+                  // Story name.
+                  Expanded(
+                    child: Text(
+                      story.name,
+                      style: story.decoration.nameTextStyle,
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
                     ),
                   ),
+                  const Spacer(),
+
+                  // Skip button.
+                  SizedBox(
+                    height: 44,
+                    width: 60,
+                    child: Visibility(
+                      visible: !hideCloseButton,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => popRoute == true
+                            ? Navigator.of(context).pop()
+                            : Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => widget),
+                              ),
+                        icon: Icon(
+                          Icons.clear,
+                          size: 20,
+                          color: story.decoration.storyTheme.foregroundColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: horizontalPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Story title.
+                    Flexible(
+                      child: Text(
+                        story.title,
+                        style: story.decoration.titleTextStyle,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Story description.
+                    Flexible(
+                      child: Text(
+                        story.description,
+                        style: story.decoration.descriptionTextStyle,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Story title.
-                Flexible(
-                  child: Text(
-                    story.title,
-                    style: story.decoration.titleTextStyle,
-                    overflow: TextOverflow.fade,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // Story description.
-                Flexible(
-                  child: Text(
-                    story.description,
-                    style: story.decoration.descriptionTextStyle,
-                    overflow: TextOverflow.fade,
-                  ),
-                ),
-              ],
             ),
-          ),
+          ],
         ),
       ],
     );
