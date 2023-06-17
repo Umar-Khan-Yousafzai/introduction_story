@@ -240,7 +240,7 @@ class _Foreground extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   fixedSize: Size(90, 30),
                   elevation: 0,
-                  backgroundColor: Color.fromRGBO(112, 112, 112, 0.4),
+                  backgroundColor: Color.fromRGBO(112, 112, 112, 0.7),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
