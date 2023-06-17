@@ -39,19 +39,19 @@ class StoryDecoration {
   ///
   /// @Default style `fontSize: 24.0, fontWeight: FontWeight.bold`
   TextStyle get titleTextStyle =>
-      _titleTextStyle.copyWith(color: storyTheme.foregroundColor);
+      _titleTextStyle.copyWith(color: Colors.black);
 
   /// TextStyle for title
   ///
   /// @Default style `fontSize: 13.0, height: 1.4`
   TextStyle get descriptionTextStyle =>
-      _descriptionTextStyle.copyWith(color: storyTheme.foregroundColor);
+      _descriptionTextStyle.copyWith(color: Colors.black);
 
   /// TextStyle for title
   ///
   /// @Default style `fontSize: 12.0, fontWeight: FontWeight.w600`
   TextStyle get nameTextStyle =>
-      _nameTextStyle.copyWith(color: storyTheme.foregroundColor);
+      _nameTextStyle.copyWith(color: Colors.black);
 
   /// Story theme
   StoryTheme get storyTheme => StoryTheme(
